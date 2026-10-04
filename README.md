@@ -1,4 +1,5 @@
 # CALCULO
+<<<<<<< HEAD
 
 A Windows desktop scientific calculator application with a secure architecture. This project uses Electron, React, TypeScript, and Vite.
 
@@ -37,3 +38,6 @@ npm run build
 ## Known Limitations and Next Milestone
 - The calculator interface currently displays placeholder values and components. Mathematical logic is not yet implemented.
 - **Next Milestone:** Implement and test the calculator expression engine.
+=======
+CALCULO is a desktop scientific calculator built with Electron, React, and TypeScript, featuring advanced calculations, interactive graphing, step-by-step equation solving, mathematical exploration, calculation history, and one-click Chrome access—all in one intuitive workspace.
+>>>>>>> 2ed80c59f81c5dd93f846bd0d5dd8f4584719722
