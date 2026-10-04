@@ -1,140 +1,462 @@
-::: {align="center"}
-\# CALCULO \### Calculate. Visualize. Explore. A desktop scientific
-calculator designed to bring mathematical tools and your everyday
-workflow into one place.
-\[\![Electron\](https://img.shields.io/badge/Electron-desktop-47848F?logo=electron&logoColor=white)\](https://www.electronjs.org/)
-\[\![React\](https://img.shields.io/badge/React-interface-61DAFB?logo=react&logoColor=20232A)\](https://react.dev/)
-\[\![TypeScript\](https://img.shields.io/badge/TypeScript-typed%20code-3178C6?logo=typescript&logoColor=white)\](https://www.typescriptlang.org/)
-\[\![Vite\](https://img.shields.io/badge/Vite-build%20tool-646CFF?logo=vite&logoColor=white)\](https://vite.dev/)
-\[Explore features\](#-what-you-can-do) · \[Run
-locally\](#-get-calculo-running) · \[Roadmap\](#-whats-next) ·
-\[Contribute\](#-contributing)
-:::
+# CALCULO
 
-\-\-- \> \*\*One workspace. More ways to work with math.\*\* \>
-Calculate with a scientific engine, explore functions visually, revisit
-previous work, and open Chrome when you need a web reference---all from
-a desktop app. \## Why CALCULO? Math often means bouncing between a
-calculator, a graphing tool, and a browser. CALCULO brings these parts
-of the workflow closer together in a focused desktop experience built
-with Electron, React, and TypeScript. \## ✦ What you can do \| Feature
-\| What it brings to your workflow \| \|\-\--\|\-\--\| \| \*\*Scientific
-calculator\*\* \| Enter supported mathematical expressions and calculate
-results in a dedicated desktop interface. \| \| \*\*Interactive
-graphing\*\* \| Plot supported functions and explore their mathematical
-shape visually. \| \| \*\*Calculation history\*\* \| Revisit previous
-calculations using the history tools available in your build. \| \|
-\*\*Chrome launch\*\* \| Open Chrome from CALCULO to consult
-documentation, references, or learning resources. \| \|
-\*\*Desktop-first experience\*\* \| Use a dedicated Electron app rather
-than keeping another calculator tab open. \| \### A typical CALCULO
-workflow \*\*Calculate → Visualize → Investigate → Continue\*\* 1. Enter
-an expression in the calculator. 2. Switch to graphing when you want to
-see a function visually. 3. Return to previous work through history when
-available. 4. Launch Chrome to research a formula or explore a related
-topic. \*The exact controls and supported operations depend on the
-current version of the app.\* \## 🧪 Try these example expressions Use
-these as examples of mathematical expressions to try if they are
-supported by the current calculator interface and math engine. \| Goal
-\| Example \| \|\-\--\|\-\--\| \| Basic arithmetic \| \`(25 + 15) / 4\`
-\| \| Powers \| \`2\^10\` \| \| Trigonometry \| \`sin(pi / 2)\` \| \|
-Logarithms \| \`log(100, 10)\` \| \| Square roots \| \`sqrt(144)\` \| \|
-Function to explore \| \`sin(x)\` \| \> \*\*Tip:\*\* Trigonometric
-results depend on the angle mode and syntax supported by the current
-build. Check the app\'s controls if a result differs from what you
-expect. \## 🖥️ Get CALCULO running Want to run the project from source
-or help build it? Follow the steps below. \### Prerequisites -
-\[Node.js\](https://nodejs.org/) --- use an LTS release compatible with
-the dependencies - npm --- included with Node.js -
-\[Git\](https://git-scm.com/) \### 1. Clone the repository \`\`\`bash
-git clone https://github.com/shiriei/CALCULO.git cd CALCULO \`\`\` \###
-2. Install dependencies \`\`\`bash npm install \`\`\` \### 3. Start the
-development app \`\`\`bash npm run dev \`\`\` Keep the terminal open
-while using the development version. \### Useful commands \| Command \|
-Purpose \| \|\-\--\|\-\--\| \| \`npm run dev\` \| Start the development
-workflow \| \| \`npm run typecheck\` \| Check TypeScript types \| \|
-\`npm test\` \| Run the Vitest test suite \| \| \`npm run build\` \|
-Compile TypeScript projects and build the frontend \| These commands
-reflect the scripts currently defined in \`package.json\`. A packaged
-installer may require separate packaging configuration. \## 🔐 Optional
-configuration: Supabase The project includes the Supabase JavaScript
-client. If your current build uses online authentication, create a
-\`.env\` file in the project root: \`\`\`env
-VITE_SUPABASE_URL=\"YOUR_SUPABASE_PROJECT_URL\"
-VITE_SUPABASE_ANON_KEY=\"YOUR_SUPABASE_ANON_KEY\" \`\`\` Replace the
-placeholders with the values from your Supabase project, then restart
-the development server. \*\*Keep secrets safe:\*\* - Never commit
-\`.env\`. - Commit only \`.env.example\` with placeholders. - Never put
-database passwords or service-role keys in \`VITE\_\` variables;
-frontend-exposed values are not secret. - Authentication will not work
-until the required project settings and environment variables are
-configured. \## ⚙️ Built with \| Technology \| Role \| \|\-\--\|\-\--\|
-\| \*\*Electron\*\* \| Desktop application runtime \| \| \*\*React\*\*
-\| User interface \| \| \*\*TypeScript\*\* \| Typed application code \|
-\| \*\*Vite\*\* \| Frontend development and build tooling \| \|
-\*\*mathjs\*\* \| Mathematical expression functionality \| \|
-\*\*Supabase JS\*\* \| Backend/authentication integration when
-configured \| \| \*\*Vitest\*\* \| Automated tests \| \## 🗺️ What\'s
-next? These are planned ideas, not promises that the features are
-already available. The goal is to grow CALCULO into a more capable
-mathematical workspace. - \[ \] \*\*Graph Intelligence\*\* --- identify
-roots, intercepts, extrema, and intersections. - \[ \] \*\*Step-by-Step
-Solver\*\* --- explain supported calculations through formulas and
-intermediate steps. - \[ \] \*\*What-If Explorer\*\* --- adjust function
-parameters with sliders and watch graphs respond. - \[ \]
-\*\*Natural-Language Math\*\* --- turn requests such as
-compound-interest questions into supported calculations. - \[ \]
-\*\*Saved Math Workspaces\*\* --- keep calculations, variables, graphs,
-and notes together. - \[ \] \*\*Smarter Browser Workflow\*\* --- send an
-expression to a browser search in one click. - \[ \] \*\*Unit
-Intelligence\*\* --- convert units and flag incompatible dimensions. -
-\[ \] \*\*Equation Capture\*\* --- extract printed equations from images
-using OCR. Have a feature idea? Open an issue and describe the problem
-it would solve, how you imagine it working, and an example if possible.
-\## 🧰 Troubleshooting
+**A desktop scientific calculator built for more than calculations.**
 
-**Node.js or npm is not recognized**
+CALCULO brings scientific mathematics, interactive graphing, calculation
+history, and quick access to Chrome into one desktop workspace. Built
+with Electron, React, and TypeScript, it aims to make everyday
+calculations and mathematical exploration easier from a single app.
 
-Install Node.js from \[nodejs.org\](https://nodejs.org/), reopen the
-terminal, then run: \`\`\`bash node \--version npm \--version \`\`\`
+```{=html}
+<p align="center">
+```
+`<a href="#-features">`{=html}Features`</a>`{=html} •
+`<a href="#-getting-started">`{=html}Get started`</a>`{=html} •
+`<a href="#-usage-guide">`{=html}Usage guide`</a>`{=html} •
+`<a href="#-technology-stack">`{=html}Tech stack`</a>`{=html} •
+`<a href="#-roadmap">`{=html}Roadmap`</a>`{=html} •
+`<a href="#-contributing">`{=html}Contributing`</a>`{=html}
+```{=html}
+</p>
+```
+> **Project status:** CALCULO is under active development. Features
+> marked as planned in the roadmap are ideas for future releases and may
+> not be available in the current build.
 
-**The app does not start**
+------------------------------------------------------------------------
 
-From the project directory, try: \`\`\`bash npm install npm run dev
-\`\`\` Read the first meaningful terminal error. If you open an issue,
-include your operating system, Node.js version, command, and a sanitized
-error message. Remove passwords and tokens from logs first.
+## Table of contents
 
-**Supabase authentication is not working**
+-   [Why CALCULO?](#-why-calculo)
+-   [Features](#-features)
+-   [Usage guide](#-usage-guide)
+-   [Getting started](#-getting-started)
+-   [Configuration](#-configuration)
+-   [Technology stack](#-technology-stack)
+-   [Project structure](#-project-structure)
+-   [Roadmap](#-roadmap)
+-   [Troubleshooting](#-troubleshooting)
+-   [Security and privacy](#-security-and-privacy)
+-   [Contributing](#-contributing)
+-   [License](#-license)
 
-Confirm that \`.env\` is in the project root, its variable names match
-\`.env.example\`, the values are correct, and you restarted the
-development server after editing it. Verify the relevant authentication
-settings in Supabase as well.
+## ✨ Why CALCULO?
 
-**Type checks, tests, or build fail**
+Switching between a calculator, graphing website, notes, and browser
+tabs interrupts the way you work. CALCULO brings key mathematical tools
+together in a desktop application, with a focus on a clean interface and
+a workflow that can grow over time.
 
-Run the commands separately to identify the failing step: \`\`\`bash npm
-run typecheck npm test npm run build \`\`\` Include the failing command
-and a concise, sanitized error when reporting the problem.
+### At a glance
 
-\## 🤝 Contributing CALCULO is a work in progress, and practical
-improvements are welcome. 1. Fork the repository. 2. Create a branch:
-\`git checkout -b feat/your-feature\` 3. Make one focused change. 4. Run
-the relevant checks. 5. Commit with a clear message, such as \`feat: add
-graph intersection detection\`. 6. Open a pull request explaining what
-changed and how you tested it. Please avoid including generated build
-folders, unrelated temporary scripts, or credentials in pull requests.
-\## 🔒 Security Please do not publish credentials, database connection
-strings, access tokens, or other secrets in commits or issues. Treat all
-\`VITE\_\` variables as client-visible. For a suspected vulnerability,
-contact the repository maintainer privately rather than publishing
-exploit details. \## 📄 License Add a \`LICENSE\` file before describing
-CALCULO as open source or specifying reuse permissions. Until a license
-is included, do not assume the code is available for unrestricted reuse.
-\-\--
+  -----------------------------------------------------------------------
+  Capability                          What it means
+  ----------------------------------- -----------------------------------
+  Scientific calculator               Work with supported mathematical
+                                      expressions and scientific
+                                      operations.
 
-::: {align="center"}
-\*\*CALCULO --- make math something you can explore.\*\* Built with
-Electron, React, TypeScript, and curiosity.
-:::
+  Interactive graphing                Visualize supported mathematical
+                                      functions.
+
+  Calculation history                 Revisit previous calculations where
+                                      history is available in your build.
+
+  Chrome access                       Launch Chrome from the app for
+                                      quick access to web resources.
+
+  Desktop experience                  Use CALCULO as an Electron desktop
+                                      application rather than a
+                                      browser-only tool.
+  -----------------------------------------------------------------------
+
+## 🚀 Features
+
+### Scientific calculations
+
+-   Enter mathematical expressions using the calculator interface.
+-   Use the supported functions and syntax provided by the calculation
+    engine.
+-   Get results without switching to a separate calculator website.
+
+### Interactive graphing
+
+-   Explore supported functions visually.
+-   Use graphing to build intuition about mathematical relationships.
+-   Graphing capabilities may vary by current build; consult the app UI
+    for available controls.
+
+### Calculation history
+
+-   Review previous calculations when the history feature is enabled in
+    your build.
+-   Use history to revisit work instead of repeatedly entering the same
+    expression.
+
+### Quick Chrome access
+
+-   Open Chrome from within the CALCULO workflow.
+-   Use your browser to look up references, documentation, or additional
+    learning resources.
+
+### Designed to grow
+
+CALCULO is being developed as a wider mathematics workspace. Potential
+future additions are listed in the roadmap and should not be assumed to
+exist in the current release.
+
+## 🧭 Usage guide
+
+1.  **Launch CALCULO** using the installed desktop app or the
+    development command below.
+2.  **Enter a calculation** using the calculator interface and the
+    expression syntax supported by the app.
+3.  **Explore a function** in the graphing area if graphing is available
+    in your current build.
+4.  **Revisit previous work** through calculation history where
+    available.
+5.  **Open Chrome** when you need to consult a web resource.
+
+> Tip: For exact function syntax, supported operations, and available
+> controls, use the in-app interface and the current source code as the
+> source of truth. The feature set may evolve while CALCULO is in
+> development.
+
+```{=html}
+<details>
+```
+```{=html}
+<summary>
+```
+`<strong>`{=html}What is CALCULO built with?`</strong>`{=html}
+```{=html}
+</summary>
+```
+-   **Electron** provides the desktop application shell.
+-   **React** builds the user interface.
+-   **TypeScript** adds static typing to the application code.
+-   **Vite** supports the frontend development and build workflow.
+-   **mathjs** provides mathematical expression functionality.
+-   **Supabase** is included as a dependency for online
+    authentication-related functionality; availability depends on
+    configuration.
+
+```{=html}
+</details>
+```
+## 💻 Getting started
+
+### Requirements
+
+Install the following before running CALCULO from source:
+
+-   [Node.js](https://nodejs.org/) (use a current LTS release compatible
+    with the project dependencies)
+-   npm (included with Node.js)
+-   [Git](https://git-scm.com/) to clone the repository
+
+### 1. Clone the repository
+
+``` bash
+git clone https://github.com/shiriei/CALCULO.git
+cd CALCULO
+```
+
+### 2. Install dependencies
+
+``` bash
+npm install
+```
+
+### 3. Start the development app
+
+``` bash
+npm run dev
+```
+
+This runs the development processes defined in `package.json`. Keep the
+terminal open while developing.
+
+### 4. Check the project
+
+Run the available checks:
+
+``` bash
+npm run typecheck
+npm test
+npm run build
+```
+
+-   `npm run typecheck` checks TypeScript types.
+-   `npm test` runs the project's Vitest test suite.
+-   `npm run build` creates a production frontend build and compiles the
+    configured TypeScript projects.
+
+### Available scripts
+
+  -----------------------------------------------------------------------
+  Command                             Purpose
+  ----------------------------------- -----------------------------------
+  `npm run dev`                       Start the development workflow.
+
+  `npm run dev:vite`                  Start Vite only.
+
+  `npm run dev:main`                  Watch and compile the Electron
+                                      main-process TypeScript project.
+
+  `npm run dev:electron`              Launch Electron after its
+                                      development prerequisites are
+                                      ready.
+
+  `npm run typecheck`                 Check TypeScript projects.
+
+  `npm test`                          Run tests with Vitest.
+
+  `npm run build`                     Build the configured application
+                                      projects.
+  -----------------------------------------------------------------------
+
+> Packaging a distributable installer is a separate step and requires a
+> packaging tool/configuration. The scripts above do not, by themselves,
+> promise a Windows installer.
+
+## 🔐 Configuration
+
+### Supabase (optional, if using online authentication)
+
+The project includes the Supabase JavaScript client. If your current
+build uses Supabase authentication, configure the expected Vite
+environment variables locally.
+
+Create a `.env` file in the project root:
+
+``` env
+VITE_SUPABASE_URL="YOUR_SUPABASE_PROJECT_URL"
+VITE_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+```
+
+Replace the placeholders with the appropriate project URL and
+client-side publishable/anonymous key from your Supabase project
+settings. Restart the development server after changing environment
+variables.
+
+-   Keep `.env` local and untracked.
+-   Commit only `.env.example` with placeholders.
+-   Never place a database password, service-role key, or other server
+    secret in a `VITE_` variable. Vite-exposed variables can be included
+    in client-side code.
+-   If authentication is not configured, online account features may be
+    unavailable.
+
+## 🧱 Technology stack
+
+  -----------------------------------------------------------------------
+  Technology                          Role
+  ----------------------------------- -----------------------------------
+  Electron                            Desktop runtime
+
+  React                               UI components
+
+  TypeScript                          Typed application code
+
+  Vite                                Frontend development and build
+                                      tooling
+
+  mathjs                              Mathematical expression engine
+
+  Supabase JS                         Authentication/backend client
+                                      integration, when configured
+
+  Vitest                              Automated testing
+  -----------------------------------------------------------------------
+
+## 📁 Project structure
+
+The exact layout may change as development continues. The main project
+areas include:
+
+``` text
+CALCULO/
+├── public/                 # Static public assets, if present
+├── src/
+│   ├── renderer/            # React UI and renderer-side application code
+│   │   ├── components/      # UI components
+│   │   └── engine/          # Calculation and graphing logic
+│   └── ...                  # Other application modules
+├── .env.example             # Environment-variable template
+├── .gitignore
+├── index.html
+├── package.json             # Scripts and dependencies
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+```
+
+Some folders may differ by branch or version. Use the actual repository
+tree if a path above is not present in your checkout.
+
+## 🗺️ Roadmap
+
+These are proposed improvements, not claims about features already
+shipped.
+
+-   [ ] **Graph Intelligence** --- detect roots, intercepts, extrema,
+    and intersections where numerical methods can reliably find them.
+-   [ ] **Step-by-Step Solver** --- explain supported calculations
+    through formulas and intermediate steps.
+-   [ ] **What-If Parameter Explorer** --- change parameters with
+    sliders and see graph updates live.
+-   [ ] **Natural-Language Math Input** --- interpret supported requests
+    such as compound-interest questions and convert them into
+    calculations.
+-   [ ] **Persistent Math Workspaces** --- save calculations, variables,
+    graphs, and notes together.
+-   [ ] **Browser Workflow Improvements** --- send a selected expression
+    to a browser search with one click.
+-   [ ] **Unit Intelligence** --- add unit conversion and flag
+    incompatible dimensions.
+-   [ ] **Equation Capture** --- extract printed equations from images
+    using OCR.
+
+### Help shape the roadmap
+
+Have an idea or found a gap? Open an issue with: - What you want to do -
+Why it would be useful - A short example or mock-up, if possible
+
+## 🛠️ Troubleshooting
+
+```{=html}
+<details>
+```
+```{=html}
+<summary>
+```
+`<strong>`{=html}`<code>`{=html}npm`</code>`{=html} or
+`<code>`{=html}node`</code>`{=html} is not recognized`</strong>`{=html}
+```{=html}
+</summary>
+```
+Install Node.js from [nodejs.org](https://nodejs.org/), reopen your
+terminal, and check:
+
+``` bash
+node --version
+npm --version
+```
+
+```{=html}
+</details>
+```
+```{=html}
+<details>
+```
+```{=html}
+<summary>
+```
+`<strong>`{=html}Dependencies or startup fail`</strong>`{=html}
+```{=html}
+</summary>
+```
+From the project root, try:
+
+``` bash
+npm install
+npm run dev
+```
+
+Read the first meaningful error in the terminal. If the problem
+persists, open an issue with your operating system, Node.js version,
+command used, and relevant error output. Remove any tokens, passwords,
+or personal information before sharing logs.
+
+```{=html}
+</details>
+```
+```{=html}
+<details>
+```
+```{=html}
+<summary>
+```
+`<strong>`{=html}Supabase authentication is
+unavailable`</strong>`{=html}
+```{=html}
+</summary>
+```
+Check that the `.env` file exists in the project root, the variable
+names match `.env.example`, the values are correct, and the development
+server was restarted after editing the file. Also verify that the
+relevant authentication settings are enabled in Supabase.
+
+```{=html}
+</details>
+```
+```{=html}
+<details>
+```
+```{=html}
+<summary>
+```
+`<strong>`{=html}Tests or build fail`</strong>`{=html}
+```{=html}
+</summary>
+```
+Run the checks individually to identify the failing step:
+
+``` bash
+npm run typecheck
+npm test
+npm run build
+```
+
+Include the failing command and a concise, sanitized error message when
+reporting the issue.
+
+```{=html}
+</details>
+```
+## 🔒 Security and privacy
+
+-   Do not commit `.env` files, database connection strings, passwords,
+    access tokens, or service-role keys.
+-   Treat all values exposed through Vite's `VITE_` environment
+    variables as client-visible.
+-   Review external-link and browser-launch behavior before using the
+    application with untrusted input.
+-   Report suspected security vulnerabilities privately to the
+    repository maintainer rather than publishing exploit details in an
+    issue.
+
+## 🤝 Contributing
+
+Contributions, bug reports, and practical feature suggestions are
+welcome.
+
+1.  Fork the repository.
+2.  Create a branch: `git checkout -b feat/your-feature`.
+3.  Make a focused change.
+4.  Run the relevant checks (`npm run typecheck`, `npm test`, and
+    `npm run build`).
+5.  Commit with a clear message, for example
+    `feat: add graph intersection detection`.
+6.  Open a pull request describing the change and how it was tested.
+
+Please keep pull requests focused and avoid including secrets, generated
+build folders, or unrelated temporary scripts.
+
+## 📄 License
+
+No license has been specified in this README. Until a license file is
+added to the repository, do not assume that the code is available for
+unrestricted reuse. If you intend to publish CALCULO as open source,
+choose a license and add its full text to a `LICENSE` file.
+
+------------------------------------------------------------------------
+
+```{=html}
+<p align="center">
+```
+Made to make mathematics easier to explore.
+```{=html}
+</p>
+```
