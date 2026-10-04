@@ -1,0 +1,354 @@
+.appContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  outline: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.header {
+  height: 50px;
+  padding: 0 var(--spacing-lg);
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--accent-color);
+}
+
+.headerControls {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.headerBtn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.headerBtn:hover, .activeHeaderBtn {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+.activeHeaderBtn {
+  font-weight: 600;
+  border-color: var(--accent-color);
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.calculatorWorkspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+}
+
+.displayArea {
+  background-color: var(--bg-surface);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid var(--border-color);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.displayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.memoryIndicator {
+  font-size: 0.85rem;
+  color: var(--color-warning);
+  font-weight: bold;
+}
+
+.modeToggle {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: 4px var(--spacing-sm);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modeToggle:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.expressionInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  font-family: 'Consolas', 'Courier New', monospace;
+  text-align: right;
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+.resultContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: var(--spacing-md);
+}
+
+.result {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.fraction {
+  font-size: 1.2rem;
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.memoryRow {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.btnMem {
+  flex: 1;
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 8px 0;
+  font-size: 0.85rem;
+  border-radius: var(--border-radius-sm);
+}
+.btnMem:hover:not(:disabled) { 
+  background-color: var(--bg-surface-elevated); 
+  color: var(--text-primary);
+}
+.btnMem:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.keypadLayout {
+  display: flex;
+  gap: var(--spacing-lg);
+  flex: 1;
+}
+
+.scientificGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--spacing-sm);
+  flex: 3;
+}
+
+.standardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-sm);
+  flex: 2;
+}
+
+button {
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnNum {
+  background-color: var(--color-success);
+  color: var(--text-inverse);
+  border: 1px solid var(--color-success-border);
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.btnNum:hover { background-color: var(--color-success-hover); border-color: var(--color-success-active); }
+.btnNum:active { background-color: var(--color-success-active); }
+
+.btnOp {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  border: 1px solid var(--color-primary-border);
+  font-weight: bold;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.btnOp:hover { background-color: var(--color-primary-hover); border-color: var(--color-primary-active); }
+.btnOp:active { background-color: var(--color-primary-active); }
+
+.btnFunc {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.btnFunc:hover { 
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-light); 
+}
+.btnFunc:active { background-color: var(--bg-surface-active); }
+
+.btnDestructive {
+  background-color: var(--color-error);
+  color: var(--text-inverse);
+  border: 1px solid var(--color-error-border);
+  font-weight: bold;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.btnDestructive:hover { background-color: var(--color-error-hover); border-color: var(--color-error-active); }
+.btnDestructive:active { background-color: var(--color-error-active); }
+
+.btnSci {
+  background-color: var(--color-warning);
+  color: var(--text-inverse);
+  font-size: 0.9rem;
+  border: 1px solid var(--color-warning-border);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.btnSci:hover { 
+  background-color: var(--color-warning-hover);
+  border-color: var(--color-warning-active);
+}
+.btnSci:active { background-color: var(--color-warning-active); }
+
+.btnEquals {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  border: 1px solid var(--color-primary-border);
+  font-weight: bold;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.btnEquals:hover { background-color: var(--color-primary-hover); border-color: var(--color-primary-active); }
+.btnEquals:active { background-color: var(--color-primary-active); }
+
+.footer {
+  padding: 6px var(--spacing-lg);
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--text-muted);
+}
+
+.sidePanel {
+  width: 300px;
+  background-color: var(--bg-surface);
+  border-left: 1px solid var(--border-color);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidePanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+.sidePanel h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.settingGroup {
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+.settingGroup label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+.settingGroup input, .settingGroup select {
+  padding: 8px;
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
+  border-radius: var(--border-radius-sm);
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+.historyItem {
+  cursor: pointer;
+  padding: 12px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  transition: background-color 0.2s;
+}
+.historyItem:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.historyExpr {
+  font-family: 'Consolas', monospace;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.historyResult {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+
+.historyMeta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 6px;
+}
+
+.emptyText {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
