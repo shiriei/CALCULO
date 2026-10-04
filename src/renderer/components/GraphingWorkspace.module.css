@@ -1,0 +1,213 @@
+.container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-surface);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.sidebar {
+  width: 280px;
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--border-color);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar h3, .sidebar h4 {
+  margin-top: 0;
+  color: var(--accent-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.sidebar h4 {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.functionList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.functionItem {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.functionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.functionInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: 'Consolas', monospace;
+  outline: none;
+  font-size: 0.85rem;
+  width: 0;
+}
+
+.removeBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px 5px;
+  transition: color 0.2s;
+}
+.removeBtn:hover {
+  color: var(--color-error);
+}
+
+.errorText {
+  color: var(--color-error);
+  font-size: 0.75rem;
+  margin-left: 20px;
+}
+
+.addBtn {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  border: 1px solid var(--color-primary-border);
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  font-size: 0.85rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.addBtn:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-active);
+}
+.addBtn:active {
+  background-color: var(--color-primary-active);
+}
+
+.evalInput {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.evalInput label {
+  color: var(--text-secondary);
+  font-family: 'Consolas', monospace;
+  font-size: 0.85rem;
+}
+.evalInput input {
+  flex: 1;
+  padding: 4px 6px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-input);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.85rem;
+}
+
+.evalResults {
+  background-color: var(--bg-surface-elevated);
+  padding: 4px 6px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+  font-family: 'Consolas', monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  min-height: 24px;
+}
+.evalResults div {
+  margin-bottom: 2px;
+}
+
+.viewSection button {
+  width: 100%;
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 6px;
+  font-size: 0.85rem;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.viewSection button:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-light);
+}
+.viewSection button:active {
+  background-color: var(--bg-surface-active);
+}
+
+.helpText {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.graphArea {
+  flex: 1;
+  background-color: var(--bg-app); /* The graphing background itself */
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+}
+.graphArea:active {
+  cursor: grabbing;
+}
+
+.svgGraph {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.toggleSidebarBtn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 6px 10px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+.toggleSidebarBtn:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-light);
+}

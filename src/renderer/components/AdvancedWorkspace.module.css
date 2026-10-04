@@ -1,0 +1,270 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tabs {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--spacing-sm);
+}
+
+.tab {
+  background-color: transparent;
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.tab:hover {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+}
+
+.activeTab {
+  background-color: var(--accent-color);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: var(--border-radius-sm);
+  cursor: default;
+  border: 1px solid var(--accent-color);
+  font-weight: bold;
+}
+
+.content {
+  flex: 1;
+  background-color: var(--bg-surface);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  overflow-y: auto;
+}
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.tool h3 {
+  margin-top: 0;
+  color: var(--accent-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  font-size: 1.2rem;
+}
+
+.help {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: -10px;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inputGroup label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.inputGroup input {
+  padding: 8px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-input);
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  font-family: monospace;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.actions button {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  padding: 8px 15px;
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.actions button:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-active);
+}
+.actions button:active {
+  background-color: var(--color-primary-active);
+}
+
+.solverSection {
+  background-color: var(--bg-surface-elevated);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+.solverSection h4 {
+  margin-top: 0;
+  color: var(--text-primary);
+}
+.solverSection button {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  padding: 8px 15px;
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  margin-top: var(--spacing-sm);
+  font-weight: bold;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.solverSection button:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-active);
+}
+.solverSection button:active {
+  background-color: var(--color-primary-active);
+}
+
+.resultBox {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background-color: var(--bg-surface-elevated);
+  border-left: 4px solid var(--accent-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  font-family: 'Consolas', monospace;
+  white-space: pre-wrap;
+}
+
+.operandRow {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.operandRow label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.dimLabel {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: 10px;
+}
+
+.operandRow input {
+  padding: 8px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-input);
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  font-family: monospace;
+}
+
+.removeBtn {
+  background-color: transparent;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  border-radius: var(--border-radius-sm);
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.removeBtn:hover {
+  background-color: var(--color-error);
+  color: var(--text-inverse);
+}
+.removeBtn:active {
+  background-color: var(--color-error-active);
+  border-color: var(--color-error-active);
+}
+
+.addOperandBtn {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px dashed var(--border-light);
+  padding: 8px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.addOperandBtn:hover {
+  background-color: var(--bg-surface-elevated);
+  border-color: var(--text-secondary);
+}
+.addOperandBtn:active {
+  background-color: var(--bg-surface-hover);
+}
+
+.opGroups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.opGroup {
+  background-color: var(--bg-surface-elevated);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.opGroup h4 {
+  margin-top: 0;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.opGroup select {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
+  padding: 6px;
+  border-radius: var(--border-radius-sm);
+}
+
+.solveBtn {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  padding: 10px 20px;
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.solveBtn:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-active);
+}
+.solveBtn:active {
+  background-color: var(--color-primary-active);
+}
