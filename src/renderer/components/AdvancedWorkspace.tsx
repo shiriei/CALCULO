@@ -9,7 +9,9 @@ import { AngleMode } from '../../shared/types';
 interface Props {
   angleMode: AngleMode;
   onSaveHistory?: (expr: string, res: string) => void;
+  activeTab: 'matrix' | 'complex' | 'vector' | 'solver';
 }
+
 
 const matrixEngine = new MatrixEngine();
 const complexEngine = new ComplexEngine();
@@ -18,18 +20,9 @@ const solverEngine = new SolverEngine();
 
 const getLabel = (index: number) => String.fromCharCode(65 + index);
 
-export const AdvancedWorkspace: React.FC<Props> = ({ angleMode, onSaveHistory }) => {
-  const [activeTab, setActiveTab] = useState<'matrix' | 'complex' | 'vector' | 'solver'>('matrix');
-
+export const AdvancedWorkspace: React.FC<Props> = ({ angleMode, onSaveHistory, activeTab }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.tabs}>
-        <button className={activeTab === 'matrix' ? styles.activeTab : styles.tab} onClick={() => setActiveTab('matrix')}>Matrix</button>
-        <button className={activeTab === 'complex' ? styles.activeTab : styles.tab} onClick={() => setActiveTab('complex')}>Complex</button>
-        <button className={activeTab === 'vector' ? styles.activeTab : styles.tab} onClick={() => setActiveTab('vector')}>Vector</button>
-        <button className={activeTab === 'solver' ? styles.activeTab : styles.tab} onClick={() => setActiveTab('solver')}>Solver</button>
-      </div>
-
       <div className={styles.content}>
         {activeTab === 'matrix' && <MatrixTool onSaveHistory={onSaveHistory} />}
         {activeTab === 'complex' && <ComplexTool angleMode={angleMode} onSaveHistory={onSaveHistory} />}

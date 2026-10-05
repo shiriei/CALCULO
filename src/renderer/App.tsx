@@ -7,6 +7,8 @@ import { GraphingWorkspace } from './components/GraphingWorkspace';
 import { AuthScreen } from './components/AuthScreen';
 import { supabase } from './lib/supabase';
 import { User } from '@supabase/supabase-js';
+import { moduleRegistry } from '../core/registry/moduleRegistry';
+import { initializeModules } from '../features/registryInit';
 
 const engine = new CalculatorEngine();
 
@@ -16,7 +18,7 @@ const App: React.FC = () => {
   // App states
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState<CalculationResult | null>(null);
-  const [workspace, setWorkspace] = useState<'standard' | 'advanced' | 'graphing'>('standard');
+  const [workspace, setWorkspace] = useState<string>('scientific');
 
   
   // Persistent data
@@ -33,6 +35,7 @@ const App: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    initializeModules();
     const initApp = async () => {
       try {
         if (window.calculoAPI) {
@@ -217,14 +220,18 @@ const App: React.FC = () => {
     }
   }
 
+  const activeModule = moduleRegistry.get(workspace);
+  const allModules = moduleRegistry.getAll();
+  const categories = ['Calculate', 'Analyze', 'Visualize', 'Data'] as const;
+
   return (
     <div className={styles.appContainer} data-theme={settings.theme}>
       <header className={styles.header}>
-        <h1 className={styles.title}>CALCULO</h1>
+        <div className={styles.brand}>
+          <h1 className={styles.title}>CALCULO</h1>
+          <span className={styles.subtitle}>Mathematical Workspace</span>
+        </div>
         <div className={styles.headerControls}>
-          <button className={`${styles.headerBtn} ${workspace === 'standard' ? styles.activeHeaderBtn : ''}`} onClick={() => setWorkspace('standard')}>Standard</button>
-          <button className={`${styles.headerBtn} ${workspace === 'advanced' ? styles.activeHeaderBtn : ''}`} onClick={() => setWorkspace('advanced')}>Advanced</button>
-          <button className={`${styles.headerBtn} ${workspace === 'graphing' ? styles.activeHeaderBtn : ''}`} onClick={() => setWorkspace('graphing')}>Graphing</button>
           <button className={`${styles.headerBtn} ${showSettings ? styles.activeHeaderBtn : ''}`} onClick={() => setShowSettings(!showSettings)}>Settings</button>
           <button className={`${styles.headerBtn} ${showHistory ? styles.activeHeaderBtn : ''}`} onClick={() => setShowHistory(!showHistory)}>History</button>
           
@@ -236,113 +243,155 @@ const App: React.FC = () => {
         </div>
       </header>
       
-      <main className={styles.mainContent}>
-        {workspace === 'standard' ? (
-          <div className={styles.calculatorWorkspace}>
-          <div className={styles.displayArea}>
-            <div className={styles.displayHeader}>
-              <span className={styles.memoryIndicator}>{memory ? `M (${memory})` : ''}</span>
-              <button className={styles.modeToggle} onClick={toggleAngleMode} title="Toggle Angle Mode">
-                {settings.angleMode.toUpperCase()}
-              </button>
+      <div className={styles.workspaceBody}>
+        <aside className={styles.sidebar}>
+          {categories.map(cat => {
+            const catModules = allModules.filter(m => m.category === cat);
+            if (catModules.length === 0) return null;
+            return (
+              <div key={cat} className={styles.navCategory}>
+                <h3 className={styles.navCategoryTitle}>{cat}</h3>
+                <div className={styles.navGroup}>
+                  {catModules.map(mod => (
+                    <button 
+                      key={mod.id}
+                      className={`${styles.navItem} ${workspace === mod.id ? styles.activeNavItem : ''} ${mod.status === 'coming-soon' ? styles.navItemSoon : ''}`}
+                      disabled={mod.status === 'coming-soon'}
+                      onClick={() => setWorkspace(mod.id)}
+                    >
+                      {mod.displayName}
+                      {mod.status === 'coming-soon' && <span className={styles.badgeSoon}>Soon</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </aside>
+
+        <main className={styles.mainContent}>
+          {activeModule && (
+            <div className={styles.moduleHeader}>
+              <h2>{activeModule.displayName}</h2>
+              <p>{activeModule.description}</p>
             </div>
-            <input 
-              ref={inputRef}
-              className={styles.expressionInput} 
-              value={expression}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              placeholder="0"
-              autoFocus
-            />
-            <div className={styles.resultContainer}>
-              <span className={styles.result}>{resultText}</span>
-              {fractionText && <span className={styles.fraction}>{fractionText}</span>}
+          )}
+          
+          <div className={styles.moduleContent}>
+
+          {workspace === 'scientific' ? (
+            <div className={styles.calculatorWorkspace}>
+              <div className={styles.displayArea}>
+                <div className={styles.displayHeader}>
+                  <span className={styles.memoryIndicator}>{memory ? `M (${memory})` : ''}</span>
+                  <button className={styles.modeToggle} onClick={toggleAngleMode} title="Toggle Angle Mode">
+                    {settings.angleMode.toUpperCase()}
+                  </button>
+                </div>
+                <input 
+                  ref={inputRef}
+                  className={styles.expressionInput} 
+                  value={expression}
+                  onChange={handleChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="0"
+                  autoFocus
+                />
+                <div className={styles.resultContainer}>
+                  <span className={styles.result}>{resultText}</span>
+                  {fractionText && <span className={styles.fraction}>{fractionText}</span>}
+                </div>
+              </div>
+
+              {/* Memory Row */}
+              <div className={styles.memoryRow}>
+                <button className={styles.btnMem} onClick={handleMC} disabled={!memory}>MC</button>
+                <button className={styles.btnMem} onClick={handleMR} disabled={!memory}>MR</button>
+                <button className={styles.btnMem} onClick={handleMPlus} disabled={!result?.success}>M+</button>
+                <button className={styles.btnMem} onClick={handleMMinus} disabled={!result?.success}>M-</button>
+                <button className={styles.btnMem} onClick={handleMS} disabled={!result?.success}>MS</button>
+              </div>
+
+              <div className={styles.keypadLayout}>
+                {/* Scientific Keypad (Left) */}
+                <div className={styles.scientificGrid}>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('sin(', 4)}>sin</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('cos(', 4)}>cos</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('tan(', 4)}>tan</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('asin(', 5)}>sin⁻¹</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('acos(', 5)}>cos⁻¹</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('atan(', 5)}>tan⁻¹</button>
+                  
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('sinh(', 5)}>sinh</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('cosh(', 5)}>cosh</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('tanh(', 5)}>tanh</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('log(', 4)}>log</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('ln(', 3)}>ln</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('exp(', 4)}>exp</button>
+
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('sqrt(', 5)}>√</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('^', 1)}>^</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('!', 1)}>!</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('abs(', 4)}>|x|</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('mod(', 4)}>mod</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('rem(', 4)}>rem</button>
+                  
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('permutations(', 13)}>nPr</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('combinations(', 13)}>nCr</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('factorize(', 10)}>fact</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('gcd(', 4)}>gcd</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('lcm(', 4)}>lcm</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('reciprocal(', 11)}>1/x</button>
+                  
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('floor(', 6)}>floor</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('ceil(', 5)}>ceil</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('round(', 6)}>round</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('pi', 2)}>π</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('e', 1)}>e</button>
+                  <button className={styles.btnSci} onClick={() => insertAtCursor('e', 1)}>E</button>
+                </div>
+
+                {/* Standard Keypad (Right) */}
+                <div className={styles.standardGrid}>
+                  <button className={styles.btnDestructive} onClick={handleClear}>AC</button>
+                  <button className={styles.btnFunc} onClick={() => insertAtCursor('(', 1)}>(</button>
+                  <button className={styles.btnFunc} onClick={() => insertAtCursor(')', 1)}>)</button>
+                  <button className={styles.btnOp} onClick={() => insertAtCursor('/', 1)}>÷</button>
+                  
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('7', 1)}>7</button>
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('8', 1)}>8</button>
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('9', 1)}>9</button>
+                  <button className={styles.btnOp} onClick={() => insertAtCursor('*', 1)}>×</button>
+                  
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('4', 1)}>4</button>
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('5', 1)}>5</button>
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('6', 1)}>6</button>
+                  <button className={styles.btnOp} onClick={() => insertAtCursor('-', 1)}>-</button>
+                  
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('1', 1)}>1</button>
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('2', 1)}>2</button>
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('3', 1)}>3</button>
+                  <button className={styles.btnOp} onClick={() => insertAtCursor('+', 1)}>+</button>
+                  
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('0', 1)}>0</button>
+                  <button className={styles.btnNum} onClick={() => insertAtCursor('.', 1)}>.</button>
+                  <button className={styles.btnFunc} onClick={() => insertAtCursor(',', 1)}>,</button>
+                  <button className={styles.btnEquals} onClick={() => handleCalculate()}>=</button>
+                </div>
+              </div>
             </div>
+          ) : ['matrix', 'complex', 'vector', 'solver'].includes(workspace) ? (
+            <AdvancedWorkspace angleMode={settings.angleMode} onSaveHistory={saveToHistory} activeTab={workspace as any} />
+          ) : workspace === 'graphing' ? (
+            <GraphingWorkspace angleMode={settings.angleMode} onSaveHistory={saveToHistory} />
+          ) : (
+            <div className={styles.placeholderWorkspace}>
+              <h3>{activeModule?.displayName} is not yet implemented</h3>
+              <p>This module will be available in a future update.</p>
+            </div>
+          )}
           </div>
-
-          {/* Memory Row */}
-          <div className={styles.memoryRow}>
-            <button className={styles.btnMem} onClick={handleMC} disabled={!memory}>MC</button>
-            <button className={styles.btnMem} onClick={handleMR} disabled={!memory}>MR</button>
-            <button className={styles.btnMem} onClick={handleMPlus} disabled={!result?.success}>M+</button>
-            <button className={styles.btnMem} onClick={handleMMinus} disabled={!result?.success}>M-</button>
-            <button className={styles.btnMem} onClick={handleMS} disabled={!result?.success}>MS</button>
-          </div>
-
-          <div className={styles.keypadLayout}>
-            {/* Scientific Keypad (Left) */}
-            <div className={styles.scientificGrid}>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('sin(', 4)}>sin</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('cos(', 4)}>cos</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('tan(', 4)}>tan</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('asin(', 5)}>sin⁻¹</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('acos(', 5)}>cos⁻¹</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('atan(', 5)}>tan⁻¹</button>
-              
-              <button className={styles.btnSci} onClick={() => insertAtCursor('sinh(', 5)}>sinh</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('cosh(', 5)}>cosh</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('tanh(', 5)}>tanh</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('log(', 4)}>log</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('ln(', 3)}>ln</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('exp(', 4)}>exp</button>
-
-              <button className={styles.btnSci} onClick={() => insertAtCursor('sqrt(', 5)}>√</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('^', 1)}>^</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('!', 1)}>!</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('abs(', 4)}>|x|</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('mod(', 4)}>mod</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('rem(', 4)}>rem</button>
-              
-              <button className={styles.btnSci} onClick={() => insertAtCursor('permutations(', 13)}>nPr</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('combinations(', 13)}>nCr</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('factorize(', 10)}>fact</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('gcd(', 4)}>gcd</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('lcm(', 4)}>lcm</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('reciprocal(', 11)}>1/x</button>
-              
-              <button className={styles.btnSci} onClick={() => insertAtCursor('floor(', 6)}>floor</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('ceil(', 5)}>ceil</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('round(', 6)}>round</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('pi', 2)}>π</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('e', 1)}>e</button>
-              <button className={styles.btnSci} onClick={() => insertAtCursor('e', 1)}>E</button>
-            </div>
-
-            {/* Standard Keypad (Right) */}
-            <div className={styles.standardGrid}>
-              <button className={styles.btnDestructive} onClick={handleClear}>AC</button>
-              <button className={styles.btnFunc} onClick={() => insertAtCursor('(', 1)}>(</button>
-              <button className={styles.btnFunc} onClick={() => insertAtCursor(')', 1)}>)</button>
-              <button className={styles.btnOp} onClick={() => insertAtCursor('/', 1)}>÷</button>
-              
-              <button className={styles.btnNum} onClick={() => insertAtCursor('7', 1)}>7</button>
-              <button className={styles.btnNum} onClick={() => insertAtCursor('8', 1)}>8</button>
-              <button className={styles.btnNum} onClick={() => insertAtCursor('9', 1)}>9</button>
-              <button className={styles.btnOp} onClick={() => insertAtCursor('*', 1)}>×</button>
-              
-              <button className={styles.btnNum} onClick={() => insertAtCursor('4', 1)}>4</button>
-              <button className={styles.btnNum} onClick={() => insertAtCursor('5', 1)}>5</button>
-              <button className={styles.btnNum} onClick={() => insertAtCursor('6', 1)}>6</button>
-              <button className={styles.btnOp} onClick={() => insertAtCursor('-', 1)}>-</button>
-              
-              <button className={styles.btnNum} onClick={() => insertAtCursor('1', 1)}>1</button>
-              <button className={styles.btnNum} onClick={() => insertAtCursor('2', 1)}>2</button>
-              <button className={styles.btnNum} onClick={() => insertAtCursor('3', 1)}>3</button>
-              <button className={styles.btnOp} onClick={() => insertAtCursor('+', 1)}>+</button>
-              
-              <button className={styles.btnNum} onClick={() => insertAtCursor('0', 1)}>0</button>
-              <button className={styles.btnNum} onClick={() => insertAtCursor('.', 1)}>.</button>
-              <button className={styles.btnFunc} onClick={() => insertAtCursor(',', 1)}>,</button>
-              <button className={styles.btnEquals} onClick={() => handleCalculate()}>=</button>
-            </div>
-          </div>
-        </div>
-        ) : workspace === 'advanced' ? (
-          <AdvancedWorkspace angleMode={settings.angleMode} onSaveHistory={saveToHistory} />
-        ) : (
-          <GraphingWorkspace angleMode={settings.angleMode} onSaveHistory={saveToHistory} />
-        )}
+        </main>
 
         {/* Settings Panel Overlay/Side */}
         {showSettings && (
@@ -412,7 +461,7 @@ const App: React.FC = () => {
             onSuccess={() => setShowAuth(false)} 
           />
         )}
-      </main>
+      </div>
 
       <footer className={styles.footer}>
         {appInfo ? (
