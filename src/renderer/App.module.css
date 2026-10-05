@@ -25,6 +25,19 @@
   font-weight: 600;
   letter-spacing: 1px;
   color: var(--accent-color);
+  line-height: 1;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.subtitle {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .headerControls {
@@ -54,12 +67,121 @@
   border-color: var(--accent-color);
 }
 
-.mainContent {
+.workspaceBody {
   flex: 1;
   display: flex;
   flex-direction: row;
   overflow: hidden;
 }
+
+.sidebar {
+  width: 240px;
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-md) 0;
+}
+
+.navCategory {
+  margin-bottom: var(--spacing-lg);
+}
+
+.navCategoryTitle {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 var(--spacing-sm) var(--spacing-lg);
+  letter-spacing: 1px;
+}
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.navItem {
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  border-radius: 0;
+  padding: 8px var(--spacing-lg) 8px calc(var(--spacing-lg) - 3px);
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navItem:hover:not(:disabled) {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.activeNavItem {
+  background-color: var(--bg-surface-elevated);
+  border-left-color: var(--accent-color);
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.navItemSoon {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.badgeSoon {
+  font-size: 0.6rem;
+  background-color: var(--bg-surface-elevated);
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--bg-app);
+}
+
+.moduleHeader {
+  padding: var(--spacing-lg) var(--spacing-lg) 0;
+}
+
+.moduleHeader h2 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.moduleHeader p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.moduleContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.placeholderWorkspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
 
 .calculatorWorkspace {
   flex: 1;
