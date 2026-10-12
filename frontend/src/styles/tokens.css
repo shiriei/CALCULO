@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg: #f6f4fb;
+  --panel: #ffffff;
+  --side: #eef0fb;
+  --line: #dcdff0;
+  --text: #3b3f5c;
+  --mute: #8a8fb0;
+  --a: #b9c4f5;
+  --a2: #d6c9f2;
+  --mint: #cdeee3;
+  --peach: #fde0d4;
+  --board: #fcfcff;
+  --grid: #e8eaf6;
+  --ink: #6b7bd6;
+  --obj: #7d8be0;
+  --fill: rgba(185, 196, 245, 0.35);
+  --danger: #ff5252;
+  --danger-bg: #ffebee;
+  --success: #388e3c;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-pill: 999px;
+  --font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --shadow-dropdown: 0 10px 30px rgba(90, 100, 170, 0.18);
+  --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.12);
+  --sidebar-width: 200px;
+  --history-width: 280px;
+  --header-height: 56px;
+}
+
+:root[data-theme="dark"], [data-theme="dark"] {
+  --bg: #12131c;
+  --panel: #1d1f2e;
+  --side: #181a27;
+  --line: #4a4e72;
+  --text: #f4f5ff;
+  --mute: #b0b6da;
+  --a: #5b68c8;
+  --a2: #7a62c0;
+  --mint: #36806c;
+  --peach: #94574a;
+  --board: #0d0e15;
+  --grid: #2f324a;
+  --ink: #c8d0ff;
+  --obj: #bcc6ff;
+  --fill: rgba(160, 175, 255, 0.3);
+  --danger: #ff6b6b;
+  --danger-bg: #341f28;
+  --success: #4caf50;
+  --shadow-dropdown: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12131c;
+    --panel: #1d1f2e;
+    --side: #181a27;
+    --line: #4a4e72;
+    --text: #f4f5ff;
+    --mute: #b0b6da;
+    --a: #5b68c8;
+    --a2: #7a62c0;
+    --mint: #36806c;
+    --peach: #94574a;
+    --board: #0d0e15;
+    --grid: #2f324a;
+    --ink: #c8d0ff;
+    --obj: #bcc6ff;
+    --fill: rgba(160, 175, 255, 0.3);
+    --danger: #ff6b6b;
+    --danger-bg: #341f28;
+    --success: #4caf50;
+    --shadow-dropdown: 0 10px 30px rgba(0, 0, 0, 0.45);
+    --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.5);
+  }
+}

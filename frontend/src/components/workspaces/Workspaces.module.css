@@ -1,0 +1,834 @@
+/* ========================================================
+   Common Workspace Containers & Typography
+   ======================================================== */
+.headingCentered {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.subCentered {
+  text-align: center;
+  color: var(--mute);
+  font-size: 14px;
+}
+
+.subText {
+  color: var(--mute);
+  font-size: 13px;
+}
+
+/* ========================================================
+   1. Ask a Question Workspace
+   ======================================================== */
+.askContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+}
+
+.askCard {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.questionInput {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.actionBarCenter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.chipsCenter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.solutionCard {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.solutionText {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.solutionDetails {
+  font-size: 14px;
+  color: var(--mute);
+}
+
+.solutionAction {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ========================================================
+   2. Scientific Calculator Workspace
+   ======================================================== */
+.calcContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.calcCard {
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calcTopBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calcTopBar h2 {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.calcBadges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.modeBadge {
+  border: 1px solid var(--line);
+  background: var(--side);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.modeBadge:hover {
+  background: var(--a);
+}
+
+.extToggle {
+  border: 1px solid var(--line);
+  background: var(--side);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mute);
+}
+
+.extToggleActive {
+  background: var(--ink);
+  color: #ffffff;
+  border-color: var(--ink);
+}
+
+.disp {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  text-align: right;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.dispTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 20px;
+}
+
+.memBadge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--side);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.disp small {
+  color: var(--mute);
+  font-size: 13px;
+  flex: 1;
+  text-align: right;
+  word-break: break-all;
+}
+
+.disp b {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  line-height: 1.2;
+}
+
+.dispFraction {
+  font-size: 14px;
+  color: var(--mute);
+  font-weight: 600;
+}
+
+.memoryBar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.memBtn {
+  border: 1px solid var(--line);
+  background: var(--side);
+  border-radius: var(--radius-md);
+  padding: 8px 0;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--mute);
+}
+
+.memBtn:hover:not(:disabled) {
+  background: var(--a);
+  color: var(--text);
+}
+
+.extraKeysGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.keys {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.k {
+  border: 1px solid var(--line);
+  background: var(--side);
+  border-radius: var(--radius-md);
+  padding: 13px 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.k:hover {
+  background: var(--a);
+}
+
+.kOp {
+  background: var(--a2);
+}
+
+.kEq {
+  background: var(--mint);
+  font-weight: 800;
+}
+
+.kCl {
+  background: var(--peach);
+}
+
+/* ========================================================
+   3. Algebra Workspace
+   ======================================================== */
+.algebraContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.algebraCard {
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sectionHeader h2 {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.tabPillBar {
+  display: flex;
+  gap: 6px;
+  background: var(--side);
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+}
+
+.tabPill {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--mute);
+  background: transparent;
+  transition: all 0.15s ease;
+}
+
+.tabPillActive {
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.quickCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.algebraInput {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.toolCard {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform 0.1s ease, border-color 0.15s ease;
+}
+
+.toolCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+}
+
+.toolCard b {
+  font-size: 16px;
+  color: var(--text);
+}
+
+.subToolPanel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.subToolPanel h3 {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.chipRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.algebraResultBox {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 15px;
+  word-break: break-all;
+  color: var(--text);
+}
+
+/* ========================================================
+   4. 2D Graphing Workspace
+   ======================================================== */
+.graphContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  gap: 8px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.graphToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 2px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.toolGroupLeft, .toolGroupRight {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.modePillGroup {
+  display: flex;
+  background: var(--side);
+  padding: 2px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+}
+
+.modePill {
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 11.5px;
+  color: var(--mute);
+  background: transparent;
+}
+
+.modePillActive {
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.graphWorkspaceBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  gap: 10px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.graphSidebar {
+  width: 230px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex-shrink: 0;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.graphSidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebarAddBtn {
+  border: 1px solid var(--line);
+  background: var(--side);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sidebarAddBtn:hover {
+  background: var(--a);
+}
+
+.graphFunctionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.graphFunctionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.functionInputRow {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.colorDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.functionField {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 13px;
+  min-width: 0;
+}
+
+.rootDetectBtn {
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--side);
+  border: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.rootDetectBtn:hover {
+  background: var(--a);
+}
+
+.removeFunctionBtn {
+  color: var(--mute);
+  padding: 4px;
+  font-size: 12px;
+}
+
+.removeFunctionBtn:hover {
+  color: var(--danger);
+}
+
+.functionError {
+  font-size: 11px;
+  color: var(--danger);
+}
+
+.graphSidebarSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.evalInputRow {
+  display: flex;
+  gap: 6px;
+}
+
+.evalInputField {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.evalResultList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.evalResultItem {
+  background: var(--bg);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.intersectSelects {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.graphSelect {
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.detectedPointsContainer {
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detectedHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.clearDetectedBtn {
+  font-size: 11px;
+  color: var(--mute);
+}
+
+.clearDetectedBtn:hover {
+  color: var(--text);
+}
+
+.detectedScroll {
+  max-height: 120px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detectedItem {
+  background: var(--side);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.detectedItemHovered {
+  background: var(--a);
+}
+
+.graphBoard {
+  flex: 1;
+  min-height: 250px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--board);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.svgBoard {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* ========================================================
+   5. Geometry Tools Workspace
+   ======================================================== */
+.toolsContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 12px;
+  height: 100%;
+}
+
+.toolsBar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.grpContainer {
+  position: relative;
+}
+
+.grpBtn {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: var(--radius-md);
+  padding: 9px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--text);
+}
+
+.grpBtnActive {
+  background: var(--a);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 25;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 6px;
+  min-width: 190px;
+  box-shadow: var(--shadow-dropdown);
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.dropdownItem:hover {
+  background: var(--side);
+}
+
+.dropdownItemActive {
+  background: var(--a);
+}
+
+.toolPillBtn {
+  border: 1px solid var(--line);
+  background: var(--side);
+  border-radius: var(--radius-pill);
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.toolPillBtn:hover:not(:disabled) {
+  background: var(--a);
+}
+
+.boardWrapper {
+  flex: 1;
+  min-height: 320px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--board);
+  position: relative;
+  overflow: hidden;
+}
+
+.boardCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.toolStatus {
+  display: flex;
+  justify-content: space-between;
+  color: var(--mute);
+  font-size: 14px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 820px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  .graphWorkspaceBody {
+    flex-direction: column;
+  }
+  .graphSidebar {
+    width: 100%;
+    max-height: 200px;
+  }
+}

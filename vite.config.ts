@@ -15,6 +15,6 @@ export default defineConfig({
   },
   // @ts-expect-error vitest config extension
   test: {
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    include: ['src/**/*.{test,spec}.{ts,tsx}', 'frontend/**/*.{test,spec}.{ts,tsx}'],
   },
 });
