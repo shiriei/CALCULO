@@ -1,0 +1,84 @@
+.pill {
+  border: 1px solid var(--line);
+  background: var(--side);
+  border-radius: var(--radius-pill);
+  padding: 8px 18px;
+  font-weight: 700;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.pill:hover {
+  background: var(--a);
+}
+
+.pillPrimary {
+  background: var(--a);
+  border-color: var(--a);
+  color: #ffffff;
+}
+
+:root[data-theme="light"] .pillPrimary,
+:root:not([data-theme="dark"]) .pillPrimary {
+  color: #2b304c;
+}
+
+.pillPrimary:hover {
+  background: var(--a2);
+  border-color: var(--a2);
+}
+
+.pillActive {
+  background: var(--a);
+  border-color: var(--ink);
+}
+
+.iconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.cardElevated {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.chip {
+  border: 0;
+  background: var(--mint);
+  border-radius: var(--radius-pill);
+  padding: 7px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+.chip:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.chipActive {
+  background: var(--ink);
+  color: #ffffff;
+}

@@ -8,9 +8,9 @@ const store = new AppStore();
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    width: 650, // Increased default width to fit expanded grids and history
-    height: 600,
-    minWidth: 500,
+    width: 1080,
+    height: 720,
+    minWidth: 600,
     minHeight: 500,
     title: 'CALCULO',
     webPreferences: {

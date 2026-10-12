@@ -1,5 +1,5 @@
 import { create, all } from 'mathjs';
-import { AngleMode } from '../../../shared/types';
+import { AngleMode } from '../../shared/types';
 
 const math = create(all);
 

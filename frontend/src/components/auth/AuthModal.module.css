@@ -1,0 +1,138 @@
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modalCard {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 440px;
+  padding: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.subText {
+  color: var(--mute);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.closeBtn {
+  border: 1px solid var(--line);
+  background: var(--side);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--mute);
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: var(--line);
+  color: var(--text);
+}
+
+.errorBanner {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.successBanner {
+  background: rgba(56, 142, 60, 0.12);
+  color: var(--success);
+  border: 1px solid var(--success);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputGroup label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.inputGroup input {
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+
+.inputInvalid {
+  border-color: var(--danger) !important;
+}
+
+.warningText {
+  font-size: 12px;
+  color: var(--danger);
+  margin-top: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.backBtn {
+  font-size: 13px;
+  color: var(--mute);
+  padding: 6px;
+  text-align: center;
+}
+
+.backBtn:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
