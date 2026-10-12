@@ -5,3 +5,8 @@ dist-electron
 .env.*
 !.env.example
 *.log
+scratch/
+calculo-store.json
+calculo-auth.json
+**/calculo-store.json
+**/calculo-auth.json

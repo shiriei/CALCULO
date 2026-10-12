@@ -25,6 +25,16 @@ export interface PlottedFunction extends FunctionDef {
 }
 
 export class GraphingEngine {
+  public normalizeExpression(expression: string): string {
+    if (!expression) return '';
+    let cleaned = expression.trim();
+    // Normalize equation prefixes like y = or f(x) =
+    cleaned = cleaned.replace(/^(?:y|[a-zA-Z]\s*\(\s*x\s*\))\s*=\s*/i, '');
+    // Replace unicode division and multiplication
+    cleaned = cleaned.replace(/÷/g, '/').replace(/×/g, '*');
+    return cleaned.trim();
+  }
+
   private getScope(angleMode: AngleMode, xValue: number) {
     const scope: any = { x: xValue };
     
@@ -34,23 +44,50 @@ export class GraphingEngine {
       const degToRad = Math.PI / 180;
       
       Object.assign(scope, {
-          sin: (val: number) => math.sin(val * degToRad),
-          cos: (val: number) => math.cos(val * degToRad),
-          tan: (val: number) => {
-            if (Math.abs(val % 180) === 90) return NaN; // Discontinuity
-            return math.tan(val * degToRad);
-          },
-          asin: (val: number) => {
-            if (val < -1 || val > 1) return NaN;
-            return (math.asin(val) as any) * radToDeg;
-          },
-          acos: (val: number) => {
-            if (val < -1 || val > 1) return NaN;
-            return (math.acos(val) as any) * radToDeg;
-          },
-          atan: (val: number) => (math.atan(val) as any) * radToDeg,
+        sin: (val: number) => math.sin(val * degToRad),
+        cos: (val: number) => math.cos(val * degToRad),
+        tan: (val: number) => {
+          const rad = val * degToRad;
+          const cosVal = Math.cos(rad);
+          if (Math.abs(cosVal) < 1e-14) return NaN;
+          return Math.tan(rad);
+        },
+        csc: (val: number) => {
+          const rad = val * degToRad;
+          const sinVal = Math.sin(rad);
+          if (Math.abs(sinVal) < 1e-14) return NaN;
+          return 1 / sinVal;
+        },
+        cosec: (val: number) => {
+          const rad = val * degToRad;
+          const sinVal = Math.sin(rad);
+          if (Math.abs(sinVal) < 1e-14) return NaN;
+          return 1 / sinVal;
+        },
+        sec: (val: number) => {
+          const rad = val * degToRad;
+          const cosVal = Math.cos(rad);
+          if (Math.abs(cosVal) < 1e-14) return NaN;
+          return 1 / cosVal;
+        },
+        cot: (val: number) => {
+          const rad = val * degToRad;
+          const sinVal = Math.sin(rad);
+          if (Math.abs(sinVal) < 1e-14) return NaN;
+          return Math.cos(rad) / sinVal;
+        },
+        asin: (val: number) => {
+          if (val < -1 || val > 1) return NaN;
+          return (math.asin(val) as any) * radToDeg;
+        },
+        acos: (val: number) => {
+          if (val < -1 || val > 1) return NaN;
+          return (math.acos(val) as any) * radToDeg;
+        },
+        atan: (val: number) => (math.atan(val) as any) * radToDeg,
       });
     } else {
+      // Radian mode
       Object.assign(scope, {
         asin: (val: number) => {
           if (val < -1 || val > 1) return NaN;
@@ -59,6 +96,31 @@ export class GraphingEngine {
         acos: (val: number) => {
           if (val < -1 || val > 1) return NaN;
           return math.acos(val);
+        },
+        tan: (val: number) => {
+          const cosVal = Math.cos(val);
+          if (Math.abs(cosVal) < 1e-14) return NaN;
+          return Math.tan(val);
+        },
+        csc: (val: number) => {
+          const sinVal = Math.sin(val);
+          if (Math.abs(sinVal) < 1e-14) return NaN;
+          return 1 / sinVal;
+        },
+        cosec: (val: number) => {
+          const sinVal = Math.sin(val);
+          if (Math.abs(sinVal) < 1e-14) return NaN;
+          return 1 / sinVal;
+        },
+        sec: (val: number) => {
+          const cosVal = Math.cos(val);
+          if (Math.abs(cosVal) < 1e-14) return NaN;
+          return 1 / cosVal;
+        },
+        cot: (val: number) => {
+          const sinVal = Math.sin(val);
+          if (Math.abs(sinVal) < 1e-14) return NaN;
+          return Math.cos(val) / sinVal;
         }
       });
     }
@@ -78,7 +140,9 @@ export class GraphingEngine {
     if (!expression || expression.trim() === '') return { error: 'Empty expression' };
     
     try {
-      const compiled = math.compile(expression);
+      const cleaned = this.normalizeExpression(expression);
+      if (!cleaned) return { error: 'Empty expression' };
+      const compiled = math.compile(cleaned);
       const scope = this.getScope(angleMode, x);
       const y = compiled.evaluate(scope);
 
@@ -95,15 +159,25 @@ export class GraphingEngine {
     }
   }
 
-  public sampleFunction(func: FunctionDef, xMin: number, xMax: number, resolution: number, angleMode: AngleMode): PlottedFunction {
+  public sampleFunction(
+    func: FunctionDef, 
+    xMin: number, 
+    xMax: number, 
+    resolution: number, 
+    angleMode: AngleMode,
+    yMin: number = -10,
+    yMax: number = 10
+  ): PlottedFunction {
     const plotted: PlottedFunction = { ...func, segments: [] };
-    if (!func.expression || func.expression.trim() === '') {
+    const rawExpr = func.expression;
+    if (!rawExpr || rawExpr.trim() === '') {
       return plotted;
     }
 
+    const cleanedExpr = this.normalizeExpression(rawExpr);
     let compiled;
     try {
-      compiled = math.compile(func.expression);
+      compiled = math.compile(cleanedExpr);
     } catch (e: any) {
       plotted.error = e.message || "Syntax Error";
       return plotted;
@@ -111,8 +185,10 @@ export class GraphingEngine {
 
     const step = (xMax - xMin) / resolution;
     let currentSegment: GraphSegment = [];
-
     let prevY: number | null = null;
+
+    const yRange = Math.max(Math.abs(yMax - yMin), 1);
+    const maxYMagnitude = yRange * 50;
 
     for (let i = 0; i <= resolution; i++) {
       const x = xMin + i * step;
@@ -127,17 +203,24 @@ export class GraphingEngine {
 
       // Check if y is valid real number
       let isValid = false;
-      if (typeof y === 'number' && Number.isFinite(y)) {
-        isValid = true;
+      if (typeof y === 'number' && Number.isFinite(y) && !Number.isNaN(y)) {
+        if (Math.abs(y) <= maxYMagnitude) {
+          isValid = true;
+        }
       }
 
-      // Check for asymptotes/huge jumps (e.g. 1/x)
+      // Check for asymptotes/discontinuities between consecutive samples
       if (isValid && prevY !== null) {
         const dy = Math.abs(y - prevY);
-        // If jump is massive relative to step width, likely an asymptote
-        const yRange = (xMax - xMin) * 20; // arbitrary heuristic based on typical aspect ratios
-        if (dy > yRange) {
-          isValid = false; // break segment
+        const oppositeSigns = (prevY > 0 && y < 0) || (prevY < 0 && y > 0);
+
+        // 1. Pole with opposite signs (e.g. 1/x, tan(x), csc(x), sec(x), cot(x))
+        if (oppositeSigns && dy > yRange * 1.5 && (Math.abs(prevY) > yRange * 0.4 || Math.abs(y) > yRange * 0.4)) {
+          isValid = false;
+        }
+        // 2. Massive jump relative to visible viewport (e.g. 1/x^2)
+        else if (dy > yRange * 25) {
+          isValid = false;
         }
       }
 
@@ -160,9 +243,10 @@ export class GraphingEngine {
   }
 
   public findRoots(func: FunctionDef, xMin: number, xMax: number, angleMode: AngleMode, resolution: number = 500): DetectionResult[] {
-    if (!func.expression || func.expression.trim() === '') return [];
+    const expr = this.normalizeExpression(func.expression);
+    if (!expr) return [];
     let compiled;
-    try { compiled = math.compile(func.expression); } catch { return []; }
+    try { compiled = math.compile(expr); } catch { return []; }
     
     const evaluate = (x: number) => {
       try {
@@ -180,11 +264,13 @@ export class GraphingEngine {
   }
 
   public findIntersections(f1: FunctionDef, f2: FunctionDef, xMin: number, xMax: number, angleMode: AngleMode, resolution: number = 500): DetectionResult[] {
-    if (!f1.expression || !f2.expression || f1.expression.trim() === '' || f2.expression.trim() === '') return [];
+    const expr1 = this.normalizeExpression(f1.expression);
+    const expr2 = this.normalizeExpression(f2.expression);
+    if (!expr1 || !expr2) return [];
     let c1, c2;
     try {
-      c1 = math.compile(f1.expression);
-      c2 = math.compile(f2.expression);
+      c1 = math.compile(expr1);
+      c2 = math.compile(expr2);
     } catch { return []; }
 
     const eval1 = (x: number) => {
