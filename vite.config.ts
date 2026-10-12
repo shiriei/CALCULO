@@ -13,4 +13,8 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
   },
+  // @ts-expect-error vitest config extension
+  test: {
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+  },
 });

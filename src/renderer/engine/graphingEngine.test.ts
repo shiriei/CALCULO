@@ -77,6 +77,35 @@ describe('GraphingEngine', () => {
       expect(res.segments.length).toBe(1); // Only the positive side gets a segment
       expect(res.segments[0][0].x).toBeGreaterThanOrEqual(0);
     });
+
+    it('samples trigonometric functions correctly in radian and degree modes', () => {
+      const func = { id: '1', expression: 'sin(x)', color: 'red' };
+      
+      // Radian mode: 0 to pi (resolution 2 -> x = 0, pi/2, pi)
+      const resRad = engine.sampleFunction(func, 0, Math.PI, 2, 'rad');
+      expect(resRad.error).toBeUndefined();
+      expect(resRad.segments.length).toBe(1);
+      expect(resRad.segments[0][0].y).toBeCloseTo(0);
+      expect(resRad.segments[0][1].y).toBeCloseTo(1);
+      expect(resRad.segments[0][2].y).toBeCloseTo(0);
+
+      // Degree mode: 0 to 180 (resolution 2 -> x = 0, 90, 180)
+      const resDeg = engine.sampleFunction(func, 0, 180, 2, 'deg');
+      expect(resDeg.error).toBeUndefined();
+      expect(resDeg.segments.length).toBe(1);
+      expect(resDeg.segments[0][0].y).toBeCloseTo(0);
+      expect(resDeg.segments[0][1].y).toBeCloseTo(1);
+      expect(resDeg.segments[0][2].y).toBeCloseTo(0);
+
+      // Degree mode: wide range -360 to 360
+      const resDegWide = engine.sampleFunction(func, -360, 360, 8, 'deg');
+      expect(resDegWide.error).toBeUndefined();
+      expect(resDegWide.segments.length).toBe(1);
+      for (const pt of resDegWide.segments[0]) {
+        expect(pt.y).toBeGreaterThanOrEqual(-1 - 1e-6);
+        expect(pt.y).toBeLessThanOrEqual(1 + 1e-6);
+      }
+    });
   });
 
   describe('findRoots and findIntersections', () => {
@@ -124,4 +153,101 @@ describe('GraphingEngine', () => {
       expect(ints.some(i => Math.abs(i.x + 1) < 0.1 && Math.abs(i.y - 1) < 0.1)).toBe(true);
     });
   });
+
+  describe('Cubic and linear graph evaluation and sampling', () => {
+    it('evaluates and samples 3x^3 as a continuous cubic curve', () => {
+      expect(engine.evaluateSingle('3x^3', 0, 'rad').value).toBeCloseTo(0);
+      expect(engine.evaluateSingle('3x^3', 2, 'rad').value).toBeCloseTo(24);
+      expect(engine.evaluateSingle('3x^3', -2, 'rad').value).toBeCloseTo(-24);
+
+      const plotted = engine.sampleFunction({ id: 'c1', expression: '3x^3', color: 'red' }, -2, 2, 50, 'rad', -30, 30);
+      expect(plotted.error).toBeUndefined();
+      expect(plotted.segments.length).toBe(1); // Exactly 1 continuous branch
+      expect(plotted.segments[0][0].y).toBeCloseTo(-24);
+      expect(plotted.segments[0][plotted.segments[0].length - 1].y).toBeCloseTo(24);
+    });
+
+    it('evaluates and samples y = 8x + 3 with equation prefix', () => {
+      expect(engine.evaluateSingle('y = 8x + 3', 0, 'rad').value).toBeCloseTo(3);
+      expect(engine.evaluateSingle('y = 8x + 3', 2, 'rad').value).toBeCloseTo(19);
+
+      const plotted = engine.sampleFunction({ id: 'l1', expression: 'y = 8x + 3', color: 'blue' }, -5, 5, 20, 'rad', -40, 45);
+      expect(plotted.error).toBeUndefined();
+      expect(plotted.segments.length).toBe(1);
+      expect(plotted.segments[0][0].y).toBeCloseTo(-37);
+      expect(plotted.segments[0][plotted.segments[0].length - 1].y).toBeCloseTo(43);
+    });
+  });
+
+  describe('Reciprocal trigonometric aliases and degree/radian modes', () => {
+    it('evaluates csc and cosec identically in radian mode', () => {
+      const cscVal = engine.evaluateSingle('csc(x)', Math.PI / 2, 'rad').value;
+      const cosecVal = engine.evaluateSingle('cosec(x)', Math.PI / 2, 'rad').value;
+      expect(cscVal).toBeCloseTo(1);
+      expect(cosecVal).toBeCloseTo(1);
+
+      expect(engine.evaluateSingle('csc(x)', Math.PI / 6, 'rad').value).toBeCloseTo(2);
+      expect(engine.evaluateSingle('cosec(x)', Math.PI / 6, 'rad').value).toBeCloseTo(2);
+    });
+
+    it('evaluates csc and cosec identically in degree mode', () => {
+      expect(engine.evaluateSingle('csc(x)', 90, 'deg').value).toBeCloseTo(1);
+      expect(engine.evaluateSingle('cosec(x)', 90, 'deg').value).toBeCloseTo(1);
+      expect(engine.evaluateSingle('csc(x)', 30, 'deg').value).toBeCloseTo(2);
+      expect(engine.evaluateSingle('cosec(x)', 30, 'deg').value).toBeCloseTo(2);
+    });
+
+    it('evaluates sec and cot in degree mode', () => {
+      expect(engine.evaluateSingle('sec(x)', 0, 'deg').value).toBeCloseTo(1);
+      expect(engine.evaluateSingle('sec(x)', 60, 'deg').value).toBeCloseTo(2);
+      expect(engine.evaluateSingle('cot(x)', 45, 'deg').value).toBeCloseTo(1);
+    });
+
+    it('evaluates cos and tan in both modes', () => {
+      expect(engine.evaluateSingle('cos(x)', 0, 'rad').value).toBeCloseTo(1);
+      expect(engine.evaluateSingle('cos(x)', Math.PI, 'rad').value).toBeCloseTo(-1);
+      expect(engine.evaluateSingle('tan(x)', Math.PI / 4, 'rad').value).toBeCloseTo(1);
+
+      expect(engine.evaluateSingle('cos(x)', 0, 'deg').value).toBeCloseTo(1);
+      expect(engine.evaluateSingle('cos(x)', 180, 'deg').value).toBeCloseTo(-1);
+      expect(engine.evaluateSingle('tan(x)', 45, 'deg').value).toBeCloseTo(1);
+    });
+  });
+
+  describe('Singularities and path segmentation', () => {
+    it('breaks cosec(x) into separate branches across singularity at x = 0', () => {
+      const plotted = engine.sampleFunction(
+        { id: 'csc1', expression: 'cosec(x)', color: 'green' },
+        -3, 3, 100, 'rad', -10, 10
+      );
+      expect(plotted.error).toBeUndefined();
+      expect(plotted.segments.length).toBeGreaterThanOrEqual(2);
+      
+      // Ensure no segment spans across x = 0 connecting negative and positive infinity
+      for (const seg of plotted.segments) {
+        const hasNegativeX = seg.some(pt => pt.x < -0.05);
+        const hasPositiveX = seg.some(pt => pt.x > 0.05);
+        expect(hasNegativeX && hasPositiveX).toBe(false);
+      }
+    });
+
+    it('breaks csc(x) in degree mode across x = 0 and x = 180', () => {
+      const plotted = engine.sampleFunction(
+        { id: 'csc2', expression: 'csc(x)', color: 'purple' },
+        -90, 90, 100, 'deg', -10, 10
+      );
+      expect(plotted.error).toBeUndefined();
+      expect(plotted.segments.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('breaks tan(x) into separate branches at asymptotes', () => {
+      const plotted = engine.sampleFunction(
+        { id: 'tan1', expression: 'tan(x)', color: 'orange' },
+        -3, 3, 150, 'rad', -10, 10
+      );
+      expect(plotted.error).toBeUndefined();
+      expect(plotted.segments.length).toBeGreaterThanOrEqual(3);
+    });
+  });
 });
+

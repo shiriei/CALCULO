@@ -44,6 +44,7 @@ describe('Advanced Mathematics Engines', () => {
     it('rejects empty matrices gracefully', () => {
       expect(engine.determinant([]).success).toBe(false);
       expect(engine.inverse([]).success).toBe(false);
+      expect(engine.add([]).success).toBe(false);
       expect(engine.add([[[]]]).success).toBe(false);
     });
 

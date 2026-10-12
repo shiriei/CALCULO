@@ -8,7 +8,7 @@ export interface DetectedPoint extends DetectionResult {
   funcColor: string;
   label: string;
 }
-import { getTickValues, formatPiLabel, getDefaultRange, convertPixelDeltaToDataDelta, GraphDisplayMode } from './graphingUtils';
+import { getTickValues, formatPiLabel, getDefaultRange, GraphDisplayMode } from './graphingUtils';
 
 interface Props {
   angleMode: AngleMode;
@@ -18,19 +18,21 @@ const engine = new GraphingEngine();
 const COLORS = ['#FF5722', '#2196F3', '#4CAF50', '#9C27B0', '#FFEB3B'];
 
 interface GWProps extends Props { onSaveHistory?: (e: string, r: string) => void; }
-export const GraphingWorkspace: React.FC<GWProps> = ({ angleMode, onSaveHistory }) => {
+export const GraphingWorkspace: React.FC<GWProps> = ({ angleMode: _angleMode, onSaveHistory }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [displayMode, setDisplayMode] = useState<GraphDisplayMode>(angleMode === 'deg' ? 'deg' : 'rad');
+  const [displayMode, setDisplayMode] = useState<GraphDisplayMode>('rad');
   const [functions, setFunctions] = useState<FunctionDef[]>([
     { id: '1', expression: 'x^2', color: COLORS[0] }
   ]);
   const [plottedData, setPlottedData] = useState<PlottedFunction[]>([]);
   
-  const initialRange = getDefaultRange(angleMode === 'deg' ? 'deg' : 'rad');
-  const [xMin, setXMin] = useState(initialRange.min);
-  const [xMax, setXMax] = useState(initialRange.max);
-  const [yMin, setYMin] = useState(-10);
-  const [yMax, setYMax] = useState(10);
+  const [viewport, setViewport] = useState({
+    xMin: -10,
+    xMax: 10,
+    yMin: -10,
+    yMax: 10
+  });
+  const { xMin, xMax, yMin, yMax } = viewport;
   
   const [evalX, setEvalX] = useState<string>('0');
   const [evalResults, setEvalResults] = useState<string[]>([]);
@@ -40,20 +42,38 @@ export const GraphingWorkspace: React.FC<GWProps> = ({ angleMode, onSaveHistory 
   const [intersectF2, setIntersectF2] = useState<string>('');
   const [hoveredPointId, setHoveredPointId] = useState<string | null>(null);
   
+  const graphAreaRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
-  const [panStart, setPanStart] = useState<{x: number, y: number, pointerId: number} | null>(null);
+  const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 800, height: 600 });
+  const [panStart, setPanStart] = useState<{ x: number; y: number; pointerId: number } | null>(null);
+
+  // Measure actual plot area dimensions dynamically via ResizeObserver
+  useEffect(() => {
+    const el = graphAreaRef.current;
+    if (!el) return;
+    const updateSize = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        setDimensions({ width: rect.width, height: rect.height });
+      }
+    };
+    updateSize();
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const getEvalAngleMode = () => displayMode === 'deg' ? 'deg' : 'rad';
 
   const plotFunctions = () => {
-    const data = functions.map(f => engine.sampleFunction(f, xMin, xMax, 500, getEvalAngleMode()));
+    const data = functions.map(f => engine.sampleFunction(f, xMin, xMax, 600, getEvalAngleMode(), yMin, yMax));
     setPlottedData(data);
     evaluateAtX(evalX);
   };
 
   useEffect(() => {
     plotFunctions();
-  }, [functions, xMin, xMax, yMin, yMax, displayMode]);
+  }, [functions, viewport, displayMode]);
 
   const addFunction = () => {
     const id = Math.random().toString(36).substr(2, 9);
@@ -88,52 +108,62 @@ export const GraphingWorkspace: React.FC<GWProps> = ({ angleMode, onSaveHistory 
     }
   };
 
-  const mapX = (x: number, width: number) => ((x - xMin) / (xMax - xMin)) * width;
-  const mapY = (y: number, height: number) => height - ((y - yMin) / (yMax - yMin)) * height;
+  const mapX = (x: number) => {
+    const span = xMax - xMin;
+    return span === 0 ? 0 : ((x - xMin) / span) * dimensions.width;
+  };
 
-  // Use useEffect to add a non-passive wheel event listener to fix app-wide scrolling
+  const mapY = (y: number) => {
+    const span = yMax - yMin;
+    return span === 0 ? 0 : dimensions.height - ((y - yMin) / span) * dimensions.height;
+  };
+
+  // Zoom centered on pointer position with robust atomic state updates
   useEffect(() => {
     const el = svgRef.current;
     if (!el) return;
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      
-      const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
-      setXMin(prevMin => {
-        setXMax(prevMax => {
-          const xRange = (prevMax - prevMin) * zoomFactor;
-          const xMid = (prevMax + prevMin) / 2;
-          // clamp
-          if (xRange < 1e-6 || xRange > 1e9) return prevMax;
-          return xMid + xRange / 2;
-        });
-        const xRange = (xMax - prevMin) * zoomFactor;
-        const xMid = (xMax + prevMin) / 2;
-        if (xRange < 1e-6 || xRange > 1e9) return prevMin;
-        return xMid - xRange / 2;
-      });
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
 
-      setYMin(prevMin => {
-        setYMax(prevMax => {
-          const yRange = (prevMax - prevMin) * zoomFactor;
-          const yMid = (prevMax + prevMin) / 2;
-          if (yRange < 1e-6 || yRange > 1e9) return prevMax;
-          return yMid + yRange / 2;
-        });
-        const yRange = (yMax - prevMin) * zoomFactor;
-        const yMid = (yMax + prevMin) / 2;
-        if (yRange < 1e-6 || yRange > 1e9) return prevMin;
-        return yMid - yRange / 2;
+      const cursorX = e.clientX - rect.left;
+      const cursorY = e.clientY - rect.top;
+      const zoomFactor = e.deltaY > 0 ? 1.15 : 0.85;
+
+      setViewport(prev => {
+        const xSpan = prev.xMax - prev.xMin;
+        const ySpan = prev.yMax - prev.yMin;
+        const newXSpan = xSpan * zoomFactor;
+        const newYSpan = ySpan * zoomFactor;
+
+        // Clamp to prevent numerical explosion or collapse
+        if (newXSpan < 1e-6 || newXSpan > 1e9 || newYSpan < 1e-6 || newYSpan > 1e9) {
+          return prev;
+        }
+
+        const fracX = Math.max(0, Math.min(1, cursorX / rect.width));
+        const fracY = Math.max(0, Math.min(1, (rect.height - cursorY) / rect.height));
+
+        const mathX = prev.xMin + fracX * xSpan;
+        const mathY = prev.yMin + fracY * ySpan;
+
+        return {
+          xMin: mathX - fracX * newXSpan,
+          xMax: mathX + (1 - fracX) * newXSpan,
+          yMin: mathY - fracY * newYSpan,
+          yMax: mathY + (1 - fracY) * newYSpan
+        };
       });
     };
 
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
-  }, [xMin, xMax, yMin, yMax]); // we need deps to avoid stale state in onWheel, or use functional state updates
+  }, []);
 
   const handlePointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
-    e.preventDefault(); // prevent native drag
+    e.preventDefault();
     e.currentTarget.setPointerCapture(e.pointerId);
     setPanStart({ x: e.clientX, y: e.clientY, pointerId: e.pointerId });
   };
@@ -144,12 +174,20 @@ export const GraphingWorkspace: React.FC<GWProps> = ({ angleMode, onSaveHistory 
     const dy = e.clientY - panStart.y;
     
     const rect = svgRef.current.getBoundingClientRect();
-    const { dXData, dYData } = convertPixelDeltaToDataDelta(dx, dy, rect.width, rect.height, xMax - xMin, yMax - yMin);
-    
-    setXMin(prev => prev - dXData);
-    setXMax(prev => prev - dXData);
-    setYMin(prev => prev + dYData);
-    setYMax(prev => prev + dYData);
+    if (rect.width === 0 || rect.height === 0) return;
+
+    setViewport(prev => {
+      const xSpan = prev.xMax - prev.xMin;
+      const ySpan = prev.yMax - prev.yMin;
+      const dXData = (dx / rect.width) * xSpan;
+      const dYData = (dy / rect.height) * ySpan;
+      return {
+        xMin: prev.xMin - dXData,
+        xMax: prev.xMax - dXData,
+        yMin: prev.yMin + dYData,
+        yMax: prev.yMax + dYData
+      };
+    });
     
     setPanStart({ x: e.clientX, y: e.clientY, pointerId: e.pointerId });
   };
@@ -163,10 +201,12 @@ export const GraphingWorkspace: React.FC<GWProps> = ({ angleMode, onSaveHistory 
 
   const resetViewForMode = (mode: GraphDisplayMode) => {
     const range = getDefaultRange(mode);
-    setXMin(range.min);
-    setXMax(range.max);
-    setYMin(-10);
-    setYMax(10);
+    setViewport({
+      xMin: range.min,
+      xMax: range.max,
+      yMin: -10,
+      yMax: 10
+    });
   };
 
   const resetView = () => resetViewForMode(displayMode);
@@ -338,7 +378,7 @@ export const GraphingWorkspace: React.FC<GWProps> = ({ angleMode, onSaveHistory 
       </div>
 
       )}
-      <div className={styles.graphArea}>
+      <div ref={graphAreaRef} className={styles.graphArea}>
         <button 
           onClick={() => setSidebarOpen(!sidebarOpen)} 
           className={styles.toggleSidebarBtn}
@@ -347,89 +387,101 @@ export const GraphingWorkspace: React.FC<GWProps> = ({ angleMode, onSaveHistory 
         >
           {sidebarOpen ? '◀' : '▶'} Controls
         </button>
-        <svg ref={svgRef} className={styles.svgGraph} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp}>
-          {/* Defs for grid patterns could go here, but doing it manually for axes/ticks */}
+        <svg 
+          ref={svgRef} 
+          className={styles.svgGraph} 
+          width={dimensions.width}
+          height={dimensions.height}
+          viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+          onPointerDown={handlePointerDown} 
+          onPointerMove={handlePointerMove} 
+          onPointerUp={handlePointerUp}
+        >
           <rect width="100%" height="100%" fill="transparent" />
           
-          {/* Grid X Lines */}
-          <svg viewBox="0 0 1000 1000" width="100%" height="100%" preserveAspectRatio="none">
-            <g className="grid">
-              {xTicks.map(t => {
-                const x = mapX(t, 1000);
-                return <line key={`gx-${t}`} x1={x} y1={0} x2={x} y2={1000} stroke="var(--border-light)" strokeWidth="1" />;
-              })}
-              {yTicks.map(t => {
-                const y = mapY(t, 1000);
-                return <line key={`gy-${t}`} x1={0} y1={y} x2={1000} y2={y} stroke="var(--border-light)" strokeWidth="1" />;
-              })}
-            </g>
-
-            <g className="axes">
-              {/* X Axis */}
-              {yMin <= 0 && yMax >= 0 && (
-                <line x1={0} y1={mapY(0, 1000)} x2={1000} y2={mapY(0, 1000)} stroke="var(--text-muted)" strokeWidth="2" />
-              )}
-              {/* Y Axis */}
-              {xMin <= 0 && xMax >= 0 && (
-                <line x1={mapX(0, 1000)} y1={0} x2={mapX(0, 1000)} y2={1000} stroke="var(--text-muted)" strokeWidth="2" />
-              )}
-            </g>
-
-            {/* Labels - Need to be careful with text scaling in viewBox, so we just render them normally */}
+          <g className="grid">
             {xTicks.map(t => {
-              if (Math.abs(t) < 1e-9) return null;
-              const x = mapX(t, 1000);
-              const y = yMin <= 0 && yMax >= 0 ? mapY(0, 1000) : 980;
-              const label = displayMode === 'pi' ? formatPiLabel(t) : parseFloat(t.toFixed(2)).toString();
-              return <text key={`tx-${t}`} x={x} y={y + 15} fill="var(--text-muted)" fontSize="12" textAnchor="middle">{label}</text>;
+              const x = mapX(t);
+              return <line key={`gx-${t}`} x1={x} y1={0} x2={x} y2={dimensions.height} stroke="var(--border-light)" strokeWidth="1" />;
             })}
             {yTicks.map(t => {
-              if (t === 0) return null;
-              const y = mapY(t, 1000);
-              const x = xMin <= 0 && xMax >= 0 ? mapX(0, 1000) : 20;
-              return <text key={`ty-${t}`} x={x + 5} y={y + 4} fill="var(--text-muted)" fontSize="12">{parseFloat(t.toFixed(2))}</text>;
+              const y = mapY(t);
+              return <line key={`gy-${t}`} x1={0} y1={y} x2={dimensions.width} y2={y} stroke="var(--border-light)" strokeWidth="1" />;
             })}
+          </g>
 
-            <g className="plots">
-              {plottedData.map(pd => (
-                <g key={pd.id}>
-                  {pd.segments.map((seg, i) => {
-                    const points = seg.map(p => `${mapX(p.x, 1000)},${mapY(p.y, 1000)}`).join(' ');
-                    return <polyline key={i} points={points} fill="none" stroke={pd.color} strokeWidth="3" vectorEffect="non-scaling-stroke" />;
-                  })}
+          <g className="axes">
+            {/* X Axis */}
+            {yMin <= 0 && yMax >= 0 && (
+              <line x1={0} y1={mapY(0)} x2={dimensions.width} y2={mapY(0)} stroke="var(--text-muted)" strokeWidth="2" />
+            )}
+            {/* Y Axis */}
+            {xMin <= 0 && xMax >= 0 && (
+              <line x1={mapX(0)} y1={0} x2={mapX(0)} y2={dimensions.height} stroke="var(--text-muted)" strokeWidth="2" />
+            )}
+          </g>
+
+          {/* Labels */}
+          {xTicks.map(t => {
+            if (Math.abs(t) < 1e-9) return null;
+            const x = mapX(t);
+            if (x < 15 || x > dimensions.width - 15) return null;
+            const yAxisPx = mapY(0);
+            const y = (yMin <= 0 && yMax >= 0) 
+              ? Math.max(16, Math.min(dimensions.height - 20, yAxisPx)) 
+              : dimensions.height - 20;
+            const label = displayMode === 'pi' ? formatPiLabel(t) : parseFloat(t.toFixed(2)).toString();
+            return <text key={`tx-${t}`} x={x} y={y + 14} fill="var(--text-muted)" fontSize="11" textAnchor="middle">{label}</text>;
+          })}
+          {yTicks.map(t => {
+            if (Math.abs(t) < 1e-9) return null;
+            const y = mapY(t);
+            if (y < 12 || y > dimensions.height - 12) return null;
+            const xAxisPx = mapX(0);
+            const x = (xMin <= 0 && xMax >= 0) 
+              ? Math.max(10, Math.min(dimensions.width - 45, xAxisPx)) 
+              : 10;
+            return <text key={`ty-${t}`} x={x + 6} y={y + 4} fill="var(--text-muted)" fontSize="11">{parseFloat(t.toFixed(2))}</text>;
+          })}
+
+          <g className="plots">
+            {plottedData.map(pd => (
+              <g key={pd.id}>
+                {pd.segments.map((seg, i) => {
+                  const points = seg.map(p => `${mapX(p.x).toFixed(1)},${mapY(p.y).toFixed(1)}`).join(' ');
+                  return <polyline key={i} points={points} fill="none" stroke={pd.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />;
+                })}
+              </g>
+            ))}
+          </g>
+
+          {/* Detected Points */}
+          <g className="detected-points">
+            {detectedPoints.map(dp => {
+              const px = mapX(dp.x);
+              const py = mapY(dp.y);
+              const isHovered = hoveredPointId === dp.id;
+              
+              if (px < -20 || px > dimensions.width + 20 || py < -20 || py > dimensions.height + 20) return null;
+
+              return (
+                <g key={dp.id} transform={`translate(${px}, ${py})`}>
+                  <circle 
+                    cx={0} cy={0} r={isHovered ? 6 : 4} 
+                    fill={dp.funcColor} stroke="var(--text-primary)" strokeWidth="2" 
+                    style={{transition: 'all 0.1s'}}
+                  />
+                  {isHovered && (
+                    <g>
+                      <rect x={10} y={-25} width={120} height={40} fill="var(--bg-surface-elevated)" stroke="var(--border-input)" rx={4} />
+                      <text x={15} y={-10} fill="var(--text-primary)" fontSize="10">{dp.label}</text>
+                      <text x={15} y={5} fill="var(--text-muted)" fontSize="10">({dp.x.toFixed(3)}, {dp.y.toFixed(3)})</text>
+                    </g>
+                  )}
                 </g>
-              ))}
-            </g>
-
-            {/* Detected Points */}
-            <g className="detected-points">
-              {detectedPoints.map(dp => {
-                const px = mapX(dp.x, 1000);
-                const py = mapY(dp.y, 1000);
-                const isHovered = hoveredPointId === dp.id;
-                
-                // Hide if way out of bounds
-                if (px < -50 || px > 1050 || py < -50 || py > 1050) return null;
-
-                return (
-                  <g key={dp.id} transform={`translate(${px}, ${py})`}>
-                    <circle 
-                      cx={0} cy={0} r={isHovered ? 6 : 4} 
-                      fill={dp.funcColor} stroke="var(--text-primary)" strokeWidth="2" 
-                      style={{transition: 'all 0.1s'}}
-                    />
-                    {isHovered && (
-                      <g>
-                        <rect x={10} y={-25} width={120} height={40} fill="var(--bg-surface-elevated)" stroke="var(--border-input)" rx={4} />
-                        <text x={15} y={-10} fill="var(--text-primary)" fontSize="10">{dp.label}</text>
-                        <text x={15} y={5} fill="var(--text-muted)" fontSize="10">({dp.x.toFixed(3)}, {dp.y.toFixed(3)})</text>
-                      </g>
-                    )}
-                  </g>
-                );
-              })}
-            </g>
-          </svg>
+              );
+            })}
+          </g>
         </svg>
       </div>
     </div>
